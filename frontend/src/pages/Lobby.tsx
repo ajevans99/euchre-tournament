@@ -1,10 +1,30 @@
 import { useState, useEffect } from "react";
 import PlayerList from "../components/PlayerList";
 import TournamentHeader from "../components/TournamentHeader";
+import RoundsCarousel from "../components/RoundsCarousel";
+import { Matchup } from "../models";
+
+const rounds: Matchup[][] = [
+  [
+    { team1: { players: ["Alice", "Bob"] }, team2: { players: ["Carol", "Dave"] }, tableNumber: 1 },
+    { team1: { players: ["Eve", "Frank"] }, team2: { players: ["Grace", "Hank"] }, tableNumber: 2 },
+    { team1: { players: ["Ivy", "Jack"] }, team2: { players: ["Kate", "Liam"] }, tableNumber: 3 },
+  ],
+  [
+    { team1: { players: ["Alice", "Frank"] }, team2: { players: ["Carol", "Grace"] }, tableNumber: 1 },
+    { team1: { players: ["Bob", "Eve"] }, team2: { players: ["Dave", "Hank"] }, tableNumber: 2 },
+  ],
+  [
+    { team1: { players: ["Alice", "Hank"] }, team2: { players: ["Bob", "Grace"] }, tableNumber: 1 },
+    { team1: { players: ["Eve", "Dave"] }, team2: { players: ["Frank", "Carol"] }, tableNumber: 2 },
+  ],
+];
+
+const mockPlayers = ["Alice", "Bob", "Carol", "Dave", "Eve", "Frank", "Grace", "Hank"];
 
 function Lobby() {
   const [tournamentCode, setTournamentCode] = useState("");
-  const [players, setPlayers] = useState<string[]>([]);
+  const [players, setPlayers] = useState<string[]>(mockPlayers);
 
   // Example tournament details
   const tournamentName = "Euchre Championship";
@@ -41,11 +61,7 @@ function Lobby() {
 
       {/* Main Content */}
       <div className="flex-grow flex flex-col items-center p-4">
-        <div className="w-full max-w-4xl p-8 space-y-8">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-800">Lobby</h2>
-          </div>
-
+        <div className="w-full max-w-4x space-y-8">
           {/* Tournament Code */}
           <div className="text-center">
             <p className="text-sm text-gray-600">Tournament Code</p>
@@ -59,6 +75,10 @@ function Lobby() {
             <h3 className="text-lg font-medium text-gray-700 mb-2">Players</h3>
             <PlayerList players={players} />
           </div>
+
+         {/* Rounds Carousel */}
+         <RoundsCarousel rounds={rounds} />
+
 
           {/* Add Player Button */}
           <div>

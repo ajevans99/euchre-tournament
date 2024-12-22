@@ -11,6 +11,31 @@ const tournamentTypeDescriptions: { [key in TournamentType]: string } = {
   "Double Elimination": "Teams are eliminated after two losses. Play continues in a bracket system until one team remains without two losses."
 };
 
+function NumberOfRoundsTournamentSetting() {
+  const [numberOfRounds, setNumberOfRounds] = useState<number>(1);
+
+  const handleRoundsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.max(1, parseInt(e.target.value, 10));
+    setNumberOfRounds(value);
+  };
+
+  return (
+    <div>
+      {/* Input for number of rounds */}
+      <label htmlFor="numberOfRounds" className="block mb-2 font-medium text-gray-700">
+        Number of Rounds
+      </label>
+      <input 
+        type="number" 
+        value={numberOfRounds}
+        onChange={handleRoundsChange}
+        placeholder="Number of Rounds" 
+        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+      />
+    </div>
+  );
+}
+
 function TournamentSettings() {
   const [activeTournamentType, setActiveTournamentType] = useState<TournamentType>("Progressive");
 
@@ -43,6 +68,24 @@ function TournamentSettings() {
         {/* Display the description of the active tournament type */}
         <div className="mt-4">
           {tournamentTypeDescriptions[activeTournamentType]}
+        </div>
+
+        {/* Specific settings for the active tournament type */}
+        <div className="mt-4 w-full">
+          {activeTournamentType === "Progressive" && <NumberOfRoundsTournamentSetting />}
+          {activeTournamentType === "Grand Prix" && <NumberOfRoundsTournamentSetting />}
+        </div>
+
+        {/* Text box for additional notes and custom rules */}
+        <div className="mt-4 w-full">
+          <label htmlFor="additionalNotes" className="block mb-2 font-medium text-gray-700">
+            Additional Notes and Custom Rules
+          </label>
+          <textarea
+            id="additionalNotes"
+            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            rows={4}
+          ></textarea>
         </div>
 
         {/* Save Button */}
