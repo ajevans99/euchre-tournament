@@ -16,6 +16,16 @@ const config: StorybookConfig = {
       ...config.css,
       postcss: path.resolve(__dirname, '../postcss.config.js'), // Add PostCSS configuration
     };
+    
+    // Add alias for react-icons
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...(config.resolve?.alias || {}),
+        'react-icons': path.resolve(__dirname, '../node_modules/react-icons'),
+      },
+    };
+
     return config;
   },
 };

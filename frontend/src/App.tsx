@@ -27,7 +27,7 @@ function App() {
       {/* Tournament settings route */}
       <Route path="/tournament/:id/settings" element={<TournamentSettings />} />
 
-      {/* Redirect unknown routes back to home, for example */}
+      {/* Redirect unknown routes back to home */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
