@@ -1,13 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
 
 type BracketMatchupProps = {
-  team1: string;
-  team2: string;
-  winner: BracketMatchupProps | null;
+  team1: React.ReactNode;
+  team2: React.ReactNode;
+  winner?: React.ReactNode;
   lineWidth?: number;
 };
 
-const Team: React.FC<{ name: string }> = ({ name }) => (
+export const Team: React.FC<{ name: string }> = ({ name }) => (
   <div className="px-2 py-1 rounded flex items-center border border-gray-300">
     <p className="text-sm">{name}</p>
   </div>
@@ -22,6 +22,7 @@ const BracketMatchup: React.FC<BracketMatchupProps> = ({
   const svgRef = useRef<SVGSVGElement>(null);
   const teamARef = useRef<HTMLDivElement>(null);
   const teamBRef = useRef<HTMLDivElement>(null);
+  const winnerRef = useRef<HTMLDivElement>(null);
 
   const [coords, setCoords] = useState({
     teamAMidpointY: 0,
@@ -38,36 +39,33 @@ const BracketMatchup: React.FC<BracketMatchupProps> = ({
     const teamARect = teamARef.current.getBoundingClientRect();
     const teamBRect = teamBRef.current.getBoundingClientRect();
 
+    const teamABSpace = teamBRect.top - teamARect.bottom;
+
     const teamAMidpointY = teamARect.height / 2;
-    const teamBMidpointY = teamARect.height + teamBRect.height / 2;
+    const teamBMidpointY = teamARect.height + teamBRect.height / 2 + teamABSpace;
   
     const teamsMidpointY = (teamAMidpointY + teamBMidpointY) / 2;
     const centerX = svgRect.width / 2;
-    const totalHeight = teamARect.height + teamBRect.height + teamARect.bottom - teamBRect.top;
+    const totalHeight = teamARect.height + teamBRect.height + teamABSpace;
 
     setCoords({ teamAMidpointY, teamBMidpointY, teamsMidpointY, centerX, totalHeight });
   }, [team1, team2, lineWidth]);
 
   return (
-    <div className="flex">
-      <div
-        
-        className="flex flex-col"
-      >
+    <div className="flex justify-end ">
+      {/* Team Boxes */}
+      <div className="flex flex-col">
         {/* Team A */}
-        <div
-          ref={teamARef}
-          className=""
-        >
-          <Team name={team1} />
+        <div ref={teamARef} className="">
+          {team1}
         </div>
 
+        {/* Spacing div */}
+        <div className="h-8"></div>
+
         {/* Team B */}
-        <div
-          ref={teamBRef}
-          className=""
-        >
-          <Team name={team2} />
+        <div ref={teamBRef} className="">
+          {team2}
         </div>
       </div>
       
@@ -76,7 +74,6 @@ const BracketMatchup: React.FC<BracketMatchupProps> = ({
         ref={svgRef}
         width={2 * lineWidth}
         height={coords.totalHeight}
-        className="border border-gray-300"
       >
         {/* Vertical Line */}
         <line
@@ -121,15 +118,13 @@ const BracketMatchup: React.FC<BracketMatchupProps> = ({
 
       <div
         style={{
-          // Push the winner container to the right by lineWidth * 2
-          
           // Push it down by the midpoint in container coordinates
-          marginTop: coords.teamsMidpointY / 2,
+          marginTop: coords.teamsMidpointY - (winnerRef.current?.getBoundingClientRect().height ?? 0) / 2,
         }}
       >
-        {winner && 
-          <BracketMatchup {...winner} lineWidth={lineWidth} />
-        }
+        <div ref={winnerRef}>
+          {winner}
+        </div>
       </div>
     </div>
   );
